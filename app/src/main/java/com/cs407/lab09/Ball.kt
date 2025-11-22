@@ -1,5 +1,6 @@
 package com.cs407.lab09
 
+import android.util.Log
 /**
  * Represents a ball that can move. (No Android UI imports!)
  *
@@ -23,7 +24,7 @@ class Ball(
     private var isFirstUpdate = true
 
     init {
-        // TODO: Call reset()
+        reset()
     }
 
     /**
@@ -37,7 +38,18 @@ class Ball(
             accY = yAcc
             return
         }
+        val v1X = velocityX + (1f / 2f) * (xAcc + accX) * dT
+        val v1Y = velocityY + (1f / 2f) * (yAcc + accY) * dT
+        val lX = velocityX * dT + (1f / 6f) * (dT * dT) * (3 * accX + xAcc)
+        val lY = velocityY * dT + (1f / 6f) * (dT * dT) * (3 * accY + yAcc)
 
+        posX += lX
+        posY += lY
+        velocityX = v1X
+        velocityY = v1Y
+        accX = 50 * xAcc
+        accY = 50 * yAcc
+        checkBoundaries()
     }
 
     /**
@@ -48,6 +60,22 @@ class Ball(
     fun checkBoundaries() {
         // TODO: implement the checkBoundaries function
         // (Check all 4 walls: left, right, top, bottom)
+        if (posX < 0) {
+            posX = 0f
+            velocityX = 0f
+        }
+        if (posX > (backgroundWidth - ballSize)) {
+            posX = backgroundWidth - ballSize
+            velocityX = 0f
+        }
+        if (posY < 0) {
+            posY = 0f
+            velocityY = 0f
+        }
+        if (posY > (backgroundHeight - ballSize)) {
+            posY = backgroundHeight - ballSize
+            velocityY = 0f
+        }
     }
 
     /**
@@ -56,6 +84,13 @@ class Ball(
      */
     fun reset() {
         // TODO: implement the reset function
+        posX = (backgroundWidth - ballSize) / 2
+        posY = (backgroundHeight - ballSize) / 2
+        velocityX = 0f
+        velocityY = 0f
+        accX = 0f
+        accY = 0f
+        isFirstUpdate = true
         // (Reset posX, posY, velocityX, velocityY, accX, accY, isFirstUpdate)
     }
 }
